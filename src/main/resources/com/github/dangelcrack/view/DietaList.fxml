@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="347.0" prefWidth="729.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.github.dangelcrack.controller.DietaController">
+    <children>
+        <ImageView fitHeight="157.0" fitWidth="208.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../media/ModalImageUtils/icon.png"/>
+            </image>
+            <effect>
+                <Glow/>
+            </effect>
+        </ImageView>
+        <TableView fx:id="tableView" editable="true" maxWidth="1000.0" minWidth="1000.0" prefWidth="1000.0"
+                   style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold; -fx-background-color: transparent; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;">
+            <columns>
+                <TableColumn fx:id="columnName" maxWidth="1000.0" prefWidth="100.0" resizable="false" text="Name"/>
+                <TableColumn fx:id="columnDescription" maxWidth="446.0" minWidth="392.0" prefWidth="392.0"
+                             resizable="false" text="Moves"/>
+                <TableColumn fx:id="dietType" maxWidth="315.0" minWidth="105.0" prefWidth="184.0" resizable="false"
+                             text="Object"/>
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#addDieta"
+                        style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold; -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;"
+                        text="Add">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#deleteDieta"
+                        style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold; -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;"
+                        text="Delete">
+                    <HBox.margin>
+                        <Insets left="100.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#editDieta"
+                        style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold; -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;"
+                        text="Edit">
+                    <HBox.margin>
+                        <Insets left="100.0"/>
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+</VBox>
