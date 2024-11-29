@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="637.0" prefWidth="1147.0" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.dangelcrack.controller.AddPersonController">
+    <children>
+        <HBox spacing="20.0" alignment="CENTER">
+            <VBox alignment="TOP_CENTER" spacing="10.0">
+                <children>
+                    <TextField fx:id="name" promptText="Enter Person Name"
+                               style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                    <TextField fx:id="altura" promptText="Enter Height"
+                               style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                    <TextField fx:id="peso" promptText="Enter Weight"
+                               style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                    <TextField fx:id="edad" promptText="Enter Age"
+                               style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                </children>
+            </VBox>
+            <VBox spacing="10.0">
+                <children>
+                    <ComboBox fx:id="dietawithPerson" promptText="Select a Diet"
+                              style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                    <HBox spacing="10.0">
+                        <children>
+                            <Button fx:id="addDiet" text="Add Diet"
+                                    style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                            <Button fx:id="deleteDieta" text="Delete Diet"
+                                    style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+            <VBox>
+                <children>
+                    <TableView fx:id="tableViewDieta" prefHeight="200.0" prefWidth="300.0">
+                        <columns>
+                            <TableColumn fx:id="columnNameDieta" text="Diet Name"/>
+                        </columns>
+                    </TableView>
+                </children>
+            </VBox>
+        </HBox>
+        <Button text="Add Object" onAction="#closeWindow"
+                style="-fx-background-color: -fx-text-box-border, -fx-background;"/>
+    </children>
+</VBox>

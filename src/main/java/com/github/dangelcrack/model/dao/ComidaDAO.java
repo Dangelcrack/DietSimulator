@@ -15,14 +15,16 @@ public class ComidaDAO implements DAO<Comida, String> {
     private static final String FINDBYNAME = "SELECT c.ID, c.Name, c.Type, c.Calories FROM Food AS c WHERE c.Name = ?";
     private static final String INSERT = "INSERT INTO Food (Name, Type, Calories) VALUES (?, ?, ?)";
     private static final String UPDATE = "UPDATE Food SET Type = ?, Calories = ? WHERE Name = ?";
-    private static final String DELETE_FOOD = "DELETE FROM Food WHERE Name = ?";
+    private static final String DELETE_FOOD = "DELETE FROM Food WHERE ID = ?";
     private static final String FINDBYDIET = "SELECT c.ID, c.Name, c.Type, c.Calories " +
             "FROM Food AS c " +
             "INNER JOIN DietFood AS df ON c.ID = df.FoodID " +
             "WHERE df.DietID = ?";
     private static final String INSERTFOODTODIET = "INSERT INTO DietFood (DietID, FoodID) VALUES (?, ?)";
     private static final String DELETE_OLD_FOOD = "DELETE FROM DietFood WHERE FoodID = ?";
-
+    private static final String checkFoodQuery = "SELECT COUNT(*) FROM Food WHERE ID = ?";
+    private static final String checkDietQuery = "SELECT COUNT(*) FROM Diet WHERE ID = ?";
+    private static final String DELETEFOODTODIET = "DELETE FROM DietFood WHERE FoodID = ? AND DietID = ?";
     private Connection conn;
 
     /**
@@ -31,7 +33,6 @@ public class ComidaDAO implements DAO<Comida, String> {
     public ComidaDAO() {
         conn = ConnectionMariaDB.getConnection();
     }
-
     @Override
     public Comida save(Comida comida) {
         if (comida == null || comida.getName() == null || comida.getName().isEmpty()) {
@@ -39,11 +40,13 @@ public class ComidaDAO implements DAO<Comida, String> {
         }
 
         try {
+            conn.setAutoCommit(false);
+
             String comidaName = comida.getName();
             Comida existingComida = findByName(comidaName);
 
             if (existingComida == null) {
-                // INSERT
+                // INSERT into Food
                 try (PreparedStatement pst = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
                     pst.setString(1, comidaName);
                     pst.setString(2, comida.getTypeFood().toString());
@@ -57,14 +60,50 @@ public class ComidaDAO implements DAO<Comida, String> {
                     }
                 }
             } else {
-                // UPDATE
+                comida.setId(existingComida.getId());
+
+                // UPDATE Food record if it exists
                 try (PreparedStatement pst = conn.prepareStatement(UPDATE)) {
                     pst.setString(1, comida.getTypeFood().toString());
                     pst.setInt(2, comida.getCalories());
                     pst.setString(3, comidaName);
                     pst.executeUpdate();
                 }
+
+                // Eliminar las relaciones existentes de DietFood (si ya existen) antes de agregar las nuevas
+                try (PreparedStatement pstDeleteDietFood = conn.prepareStatement("DELETE FROM DietFood WHERE FoodID = ?")) {
+                    pstDeleteDietFood.setInt(1, comida.getId());
+                    pstDeleteDietFood.executeUpdate();
+                }
             }
+
+            // Verificar que la comida tiene un ID válido
+            if (comida.getId() == 0) {
+                conn.rollback();
+                return null;
+            }
+
+            // Insertar las nuevas relaciones entre comida y dietas
+            if (comida.getDietaList() != null && !comida.getDietaList().isEmpty()) {
+                for (Dieta dieta : comida.getDietaList()) {
+                    try (PreparedStatement pstCheckDiet = conn.prepareStatement(checkDietQuery)) {
+                        pstCheckDiet.setInt(1, dieta.getId());
+                        try (ResultSet rsDiet = pstCheckDiet.executeQuery()) {
+                            if (rsDiet.next() && rsDiet.getInt(1) == 0) {
+                                conn.rollback();
+                                return null;
+                            }
+                        }
+                    }
+                    try (PreparedStatement pstComidas = conn.prepareStatement(INSERTFOODTODIET)) {
+                        pstComidas.setInt(1, dieta.getId());
+                        pstComidas.setInt(2, comida.getId());
+                        pstComidas.executeUpdate();
+                    }
+                }
+            }
+
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,19 +111,20 @@ public class ComidaDAO implements DAO<Comida, String> {
         return comida;
     }
 
+
     @Override
     public Comida delete(Comida comida) {
-        if (comida == null || comida.getName() == null) return comida;
+        if (comida == null || comida.getId() == 0) return comida;
 
         try (PreparedStatement pstFood = conn.prepareStatement(DELETE_FOOD);
              PreparedStatement pstDietFood = conn.prepareStatement(DELETE_OLD_FOOD)) {
 
-            // Delete associations in DietFood
+            // Delete associations in DietFood first
             pstDietFood.setInt(1, comida.getId());
             pstDietFood.executeUpdate();
 
-            // Delete the food itself
-            pstFood.setString(1, comida.getName());
+            // Now delete the food itself from the Food table
+            pstFood.setInt(1, comida.getId());
             pstFood.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

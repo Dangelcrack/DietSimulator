@@ -9,24 +9,24 @@
     <top>
         <MenuBar style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: Italic; -fx-font-weight: bold; -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0; -fx-background-color: -fx-focus-color, -fx-background;" BorderPane.alignment="CENTER">
             <menus>
-                <Menu mnemonicParsing="false" text="Pokemon">
+                <Menu mnemonicParsing="false" text="Diets">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#goToPokemon" text="Pokemon Utils" />
+                        <MenuItem mnemonicParsing="false" onAction="#goToDiets" text="Diet Utils" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Moves">
+                <Menu mnemonicParsing="false" text="Foods">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goToMoves" text="Moves Utils" />
+                  <MenuItem mnemonicParsing="false" onAction="#goToFoods" text="Food Utils" />
                </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Objects">
+                <Menu mnemonicParsing="false" text="Persons">
                     <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goToObjects" text="Objects Utils" />
+                  <MenuItem mnemonicParsing="false" onAction="#goToPersons" text="Person Utils" />
                     </items>
                 </Menu>
-            <Menu mnemonicParsing="false" text="Combat!">
+            <Menu mnemonicParsing="false" text="Calculate!">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goToCombats" text="Start Combat!" />
+                  <MenuItem mnemonicParsing="false" onAction="#goToCalculator" text="Calculator" />
                </items>
             </Menu>
                 <Menu mnemonicParsing="false" onAction="#goToAbout" text="About">

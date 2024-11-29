@@ -7,19 +7,19 @@ package com.github.dangelcrack.model.entity;
 public enum Scenes {
     ROOT("view/layout.fxml"),
     DIETLIST("view/DietaList.fxml"),
-    MOVESLIST("view/MovesList.fxml"),
-    OBJECTSLIST("view/ObjectsList.fxml"),
+    FOODLIST("view/FoodsList.fxml"),
+    PERSONLIST("view/PersonsList.fxml"),
     ABOUT("view/about.fxml"),
-    ADDDIET("view/addDieta.fxml"),
-    ADDMOVE("view/addMove.fxml"),
-    ADDOBJECT("view/addObject.fxml"),
-    DELETEDIET("view/deleteDieta.fxml"),
-    DELETEMOVE("view/deleteMove.fxml"),
-    DELETEOBJECT("view/deleteObject.fxml"),
-    EDITDIET("view/editDieta.fxml"),
-    EDITMOVE("view/editMove.fxml"),
-    EDITOBJECT("view/editObject.fxml"),
-    COMBATS("view/combats.fxml");
+    ADDDIET("view/addDiet.fxml"),
+    ADDFOOD("view/addFood.fxml"),
+    ADDPERSON("view/addPerson.fxml"),
+    DELETEDIET("view/deleteDiet.fxml"),
+    DELETEFOOD("view/deleteFood.fxml"),
+    DELETEPERSON("view/deletePerson.fxml"),
+    EDITDIET("view/editDiet.fxml"),
+    EDITFOOD("view/editFood.fxml"),
+    EDITPERSON("view/editPerson.fxml"),
+    CALCULATE("view/calculate.fxml");
     private String url;
     /**
      * Constructor for the enum constant.

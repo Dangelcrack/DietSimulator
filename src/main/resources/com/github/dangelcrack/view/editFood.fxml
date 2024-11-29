@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox fx:id="hBox" alignment="CENTER" prefHeight="637.0" prefWidth="1147.0" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.dangelcrack.controller.EditFoodController">
+    <children>
+        <VBox prefHeight="426.0" prefWidth="884.0" spacing="10.0">
+            <children>
+                <HBox spacing="20.0">
+                    <children>
+                        <TableView fx:id="tableViewComidas" editable="true" prefHeight="402.0" prefWidth="433.0"
+                                   style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold; -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;">
+                            <columns>
+                                <TableColumn fx:id="columnNameComida" maxWidth="1000.0" minWidth="100.0" prefWidth="100.0"
+                                             resizable="false" text="Nombre"/>
+                                <TableColumn fx:id="typeComida" maxWidth="1000.0" minWidth="100.0" prefWidth="100.0"
+                                             resizable="false" text="Type"/>
+                                <TableColumn fx:id="caloriesComida" maxWidth="1000.0" minWidth="150.0" prefWidth="150.0"
+                                             resizable="false" text="Category"/>
+                            </columns>
+                        </TableView>
+                        <VBox alignment="TOP_CENTER" spacing="10.0">
+                            <children>
+                                <TextField fx:id="name" prefHeight="27.0" prefWidth="200.0" promptText="Food Name"/>
+                                <ComboBox fx:id="type" prefHeight="27.0" prefWidth="200.0" promptText="Type of Food"/>
+                                <TextField fx:id="calories" prefHeight="27.0" prefWidth="200.0" promptText="Calories"/>
+                                <ComboBox fx:id="foodinDiet" prefHeight="27.0" prefWidth="200.0"
+                                          promptText="Select Diet"/>
+                                <HBox spacing="10.0">
+                                    <children>
+                                        <Button fx:id="addDiet" text="Add Diet"/>
+                                        <Button fx:id="deleteDiet" text="Remove Diet"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        <VBox>
+                            <children>
+                                <TableView fx:id="tableViewDieta" prefHeight="300.0" prefWidth="400.0">
+                                    <columns>
+                                        <TableColumn fx:id="columnNameDieta" text="Diet Name"/>
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <Button onAction="#closeWindow" text="Save Food"/>
+            </children>
+        </VBox>
+    </children>
+</HBox>

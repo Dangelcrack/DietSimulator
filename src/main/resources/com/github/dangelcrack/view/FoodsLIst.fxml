@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="vbox" alignment="CENTER" prefHeight="347.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.dangelcrack.controller.FoodsController">
+    <children>
+        <HBox alignment="CENTER" spacing="100.0" HBox.hgrow="ALWAYS">
+            <TableView fx:id="tableView" editable="true" maxHeight="291.0" maxWidth="446.0" minHeight="291.0"
+                       minWidth="446.0" prefHeight="291.0" prefWidth="446.0"
+                       style="-fx-font-family: 'Arial'; -fx-font-size: 15.0;"
+                       HBox.hgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="columnName" minWidth="100.0" text="Name"/>
+                    <TableColumn fx:id="columnType" minWidth="100.0" text="Type"/>
+                    <TableColumn fx:id="columnCalories" minWidth="94.0" text="Calories"/>
+                </columns>
+            </TableView>
+            <TableView fx:id="tableView2" editable="false" maxHeight="291.0" maxWidth="446.0" minHeight="291.0"
+                       minWidth="446.0" prefHeight="291.0" prefWidth="446.0"
+                       style="-fx-font-family: 'Arial'; -fx-font-size: 15.0;">
+                <columns>
+                    <TableColumn fx:id="dietasNames" minWidth="110.0" text="Diet Name"/>
+                    <TableColumn fx:id="typeDiet" minWidth="117.0" text="Type"/>
+                </columns>
+            </TableView>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="50.0" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#addFood"
+                        style="-fx-font-family: 'Arial'; -fx-font-size: 15.0;" text="Add Food"/>
+                <Button mnemonicParsing="false" onAction="#deleteFood"
+                        style="-fx-font-family: 'Arial'; -fx-font-size: 15.0;" text="Delete Food"/>
+                <Button mnemonicParsing="false" onAction="#editFood"
+                        style="-fx-font-family: 'Arial'; -fx-font-size: 15.0;" text="Edit Food"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>

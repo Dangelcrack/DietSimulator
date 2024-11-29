@@ -1,5 +1,7 @@
 package com.github.dangelcrack.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Comida {
@@ -7,16 +9,17 @@ public class Comida {
     protected String name;
     protected TypeFood typeFood;
     protected int calories;
+    protected List<Dieta> dietaList;
 
-    public Comida(int id, String name, TypeFood typeFood, int calories) {
-        this.id = id;
+    public Comida( String name, TypeFood typeFood, int calories,List<Dieta> dietaList) {
         this.name = name;
         this.typeFood = typeFood;
         this.calories = calories;
+        this.dietaList = dietaList;
     }
 
     public Comida() {
-        this(-1,"",null,0);
+        this("",null,0,null);
 
     }
 
@@ -52,6 +55,34 @@ public class Comida {
         this.calories = calories;
     }
 
+    public List<Dieta> getDietaList() {
+        return dietaList;
+    }
+
+    public void setDietaList(List<Dieta> dietaList) {
+        this.dietaList = dietaList;
+    }
+    public void addDiet(Dieta dieta){
+        if(dietaList == null){
+            dietaList = new ArrayList<>();
+        }
+        if(!dietaList.contains(dieta)){
+            dietaList.add(dieta);
+        }
+    }
+    public void removeDiet(Dieta dieta){
+        if(dietaList != null){
+            dietaList.remove(dieta);
+        }
+    }
+    public Dieta getComida(Dieta dieta){
+        Dieta result = null;
+        if(dietaList != null){
+            int i = dietaList.indexOf(dieta);
+            result = dietaList.get(i);
+        }
+        return result;
+    }
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

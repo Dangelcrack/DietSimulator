@@ -8,17 +8,19 @@ public class Persona {
     protected int altura;
     protected int peso;
     protected int edad;
+    protected Dieta dieta;
 
-    public Persona(int id, String name, int altura, int peso, int edad) {
+    public Persona(int id, String name, int altura, int peso, int edad,Dieta dieta) {
         this.id = id;
         this.name = name;
         this.altura = altura;
         this.peso = peso;
         this.edad = edad;
+        this.dieta = dieta;
     }
 
     public Persona() {
-        this(-1,"",-1,-1,-1);
+        this(-1,"",-1,-1,-1,null);
     }
 
     public int getId() {
@@ -59,6 +61,14 @@ public class Persona {
 
     public void setEdad(int edad) {
         this.edad = edad;
+    }
+
+    public Dieta getDieta() {
+        return dieta;
+    }
+
+    public void setDieta(Dieta dieta) {
+        this.dieta = dieta;
     }
 
     @Override

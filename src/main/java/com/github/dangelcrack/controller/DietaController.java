@@ -97,6 +97,7 @@ public class DietaController extends Controller implements Initializable {
                 new BackgroundSize(100, 100, true, true, false, true)
         );
         vbox.setBackground(new Background(backgroundImage));
+        dietType.setCellValueFactory(dieta -> new SimpleStringProperty(dieta.getValue().getTypeDiet().toString()));
         columnDescription.setCellValueFactory(dieta -> new SimpleStringProperty(dieta.getValue().getDescription().toString()));
         columnName.setCellValueFactory(dieta -> new SimpleStringProperty(dieta.getValue().getName().toString()));
         columnName.setCellFactory(TextFieldTableCell.forTableColumn());

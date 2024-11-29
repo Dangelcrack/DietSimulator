@@ -2,6 +2,7 @@ package com.github.dangelcrack.model.dao;
 
 import com.github.dangelcrack.model.connection.ConnectionMariaDB;
 import com.github.dangelcrack.model.entity.Dieta;
+import com.github.dangelcrack.model.entity.Persona;
 import com.github.dangelcrack.model.entity.TypeDiet;
 
 import java.io.IOException;
@@ -25,8 +26,18 @@ public class DietaDAO implements DAO<Dieta, String> {
 
     private static final String FIND_DIETA_BY_NAME =
             "SELECT ID, Name, Description, Type FROM Diet WHERE Name = ?";
-
-    private Connection conn;
+    private static final String FIND_DIET_BY_FOOD_NAME =
+            "SELECT d.ID, d.Name, d.Description, d.Type\n" +
+                    "        FROM Diet d\n" +
+                    "        JOIN DietFood df ON d.ID = df.DietID\n" +
+                    "        JOIN Food f ON df.FoodID = f.ID\n" +
+                    "        WHERE f.Name = ?;";
+    private static final String FIND_DIETA_BY_ID = "SELECT ID, Name, Description, Type FROM Diet WHERE ID = ?";
+    private static final String FIND_BY_OBJ_NAME = "SELECT d.ID, d.Name, d.Description, d.Type " +
+            "FROM Diet d " +
+            "INNER JOIN Person p ON d.ID = p.DietID " +
+            "WHERE p.Name = ?";
+    private static Connection conn;
 
     public DietaDAO() {
         conn = ConnectionMariaDB.getConnection();
@@ -109,7 +120,65 @@ public class DietaDAO implements DAO<Dieta, String> {
 
         return dieta;
     }
+    public List<Dieta> findDietByFoodName(String foodName) {
+        List<Dieta> dietList = new ArrayList<>();
+        try (PreparedStatement pst = conn.prepareStatement(FIND_DIET_BY_FOOD_NAME)) {
+            pst.setString(1, foodName);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    Dieta diet = new Dieta();
+                    diet.setId(rs.getInt("ID"));
+                    diet.setName(rs.getString("Name"));
+                    diet.setDescription(rs.getString("Description"));
+                    diet.setTypeDiet(TypeDiet.valueOf(rs.getString("Type")));
+                    dietList.add(diet);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        return dietList;
+    }
+    public static Dieta findById(int id) {
+        Dieta dieta = null;
+        try (PreparedStatement pst = conn.prepareStatement(FIND_DIETA_BY_ID)) {
+            pst.setInt(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    dieta = new Dieta();
+                    dieta.setId(rs.getInt("ID"));
+                    dieta.setName(rs.getString("Name"));
+                    dieta.setDescription(rs.getString("Description"));
+                    dieta.setTypeDiet(TypeDiet.valueOf(rs.getString("Type")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dieta;
+    }
+    public List<Dieta> findDietByPerson(Persona p) {
+        List<Dieta> dietList = new ArrayList<>();
+        try (PreparedStatement pst = conn.prepareStatement(FIND_BY_OBJ_NAME)) {
+            pst.setString(1, p.getName());
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    Dieta dieta = new Dieta();
+                    dieta.setId(rs.getInt("ID"));
+                    dieta.setName(rs.getString("Name"));
+                    dieta.setDescription(rs.getString("Description"));
+                    dieta.setTypeDiet(TypeDiet.valueOf(rs.getString("Type")));
+                    dietList.add(dieta);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dietList;
+    }
     @Override
     public List<Dieta> findAll() {
         List<Dieta> dietas = new ArrayList<>();

@@ -64,7 +64,7 @@ public class AppController extends Controller implements Initializable {
         Scene _scene = new Scene(view.scene);
         stage.setScene(_scene);
         try {
-            stage.getIcons().add(new Image(getClass().getResourceAsStream("/com/github/dangelcrack/media/ModalImageUtils/iconPokemon.png")));
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/com/github/dangelcrack/media/ModalImageUtils/icon.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,28 +114,28 @@ public class AppController extends Controller implements Initializable {
      * Navigates to the Pokémon List scene.
      */
     @FXML
-    private void goToPokemon() throws IOException {
+    private void goToDiets() throws IOException {
         changeScene(Scenes.DIETLIST,null);
     }
     /**
      * Navigates to the Moves List scene.
      */
     @FXML
-    private void goToMoves() throws IOException{
-        changeScene(Scenes.MOVESLIST,null);
+    private void goToFoods() throws IOException{
+        changeScene(Scenes.FOODLIST,null);
     }
     /**
      * Navigates to the Objects List scene.
      */
     @FXML
-    private void goToObjects() throws IOException{
-        changeScene(Scenes.OBJECTSLIST,null);
+    private void goToPersons() throws IOException{
+        changeScene(Scenes.PERSONLIST,null);
     }
     /**
      * Navigates to the Combats scene.
      */
     @FXML
-    private void goToCombats() throws IOException{
-        changeScene(Scenes.COMBATS,null);
+    private void goToCalculator() throws IOException{
+        changeScene(Scenes.CALCULATE,null);
     }
 }
