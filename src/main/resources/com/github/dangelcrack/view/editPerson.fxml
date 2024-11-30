@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
@@ -16,11 +17,12 @@
                 <children>
                     <!-- Table for displaying associated diets -->
                     <TableView fx:id="tableViewDietas" editable="true" prefHeight="402.0" prefWidth="433.0"
-                               style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-weight: bold;
-                                      -fx-background-color: #f5f5f5; -fx-background-radius: 5px; -fx-border-radius: 5px;">
+                               style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                      -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                      -fx-background-radius: 0;">
                         <columns>
-                            <TableColumn fx:id="columnNameDieta" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0"
-                                         resizable="false" text="Diet Name"/>
+                            <TableColumn fx:id="columnNameDieta" text="Diet Name"
+                                         style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;" />
                         </columns>
                     </TableView>
 
@@ -28,42 +30,52 @@
                     <VBox alignment="TOP_CENTER" spacing="15.0">
                         <children>
                             <!-- Label and ComboBox for selecting person -->
-                            <Label text="Select Person" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
                             <ComboBox fx:id="personaComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Select Person"
-                                      style="-fx-font-size: 14px; -fx-background-color: #e0e0e0; -fx-border-radius: 5px; -fx-text-fill: white;"/>
+                                      style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                             -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                             -fx-background-radius: 0;" />
 
                             <!-- Label and TextField for Person Name -->
-                            <Label text="Person Name" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
                             <TextField fx:id="personName" prefHeight="30.0" prefWidth="250.0" promptText="Person Name"
-                                       style="-fx-font-size: 14px; -fx-background-color: #e0e0e0; -fx-border-radius: 5px; -fx-text-fill: white;"/>
+                                       style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                              -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                              -fx-background-radius: 0;" />
 
                             <!-- Label and TextField for Height -->
-                            <Label text="Height" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
                             <TextField fx:id="personHeight" prefHeight="30.0" prefWidth="250.0" promptText="Height"
-                                       style="-fx-font-size: 14px; -fx-background-color: #e0e0e0; -fx-border-radius: 5px; -fx-text-fill: white;"/>
+                                       style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                              -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                              -fx-background-radius: 0;" />
 
                             <!-- Label and TextField for Weight -->
-                            <Label text="Weight" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
                             <TextField fx:id="personWeight" prefHeight="30.0" prefWidth="250.0" promptText="Weight"
-                                       style="-fx-font-size: 14px; -fx-background-color: #e0e0e0; -fx-border-radius: 5px; -fx-text-fill: white;"/>
+                                       style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                              -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                              -fx-background-radius: 0;" />
 
                             <!-- Label and TextField for Age -->
-                            <Label text="Age" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
                             <TextField fx:id="personAge" prefHeight="30.0" prefWidth="250.0" promptText="Age"
-                                       style="-fx-font-size: 14px; -fx-background-color: #e0e0e0; -fx-border-radius: 5px; -fx-text-fill: white;"/>
+                                       style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                              -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                              -fx-background-radius: 0;" />
 
                             <!-- Label and ComboBox for selecting diet -->
-                            <Label text="Select Diet" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
                             <ComboBox fx:id="dietComboBox" prefHeight="30.0" prefWidth="250.0" promptText="Select Diet"
-                                      style="-fx-font-size: 14px; -fx-background-color: #e0e0e0; -fx-border-radius: 5px; -fx-text-fill: white;"/>
+                                      style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                             -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                             -fx-background-radius: 0;" />
 
                             <!-- Buttons for adding/removing diet -->
                             <HBox spacing="15.0" alignment="CENTER">
                                 <children>
                                     <Button fx:id="addDietaButton" text="Add Diet" prefHeight="35.0" prefWidth="120.0"
-                                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                                            style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                                   -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                                   -fx-background-radius: 0;" />
                                     <Button fx:id="deleteDietaButton" text="Remove Diet" prefHeight="35.0" prefWidth="120.0"
-                                            style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                                            style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                                                   -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                                                   -fx-background-radius: 0;" />
                                 </children>
                             </HBox>
                         </children>
@@ -73,7 +85,9 @@
 
             <!-- Save button at the bottom -->
             <Button onAction="#closeWindow" text="Save Person" prefHeight="40.0" prefWidth="200.0"
-                    style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                    style="-fx-font-family: 'Arial'; -fx-font-size: 15.0; -fx-font-style: italic; -fx-font-weight: bold;
+                           -fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;
+                           -fx-background-radius: 0;" />
         </VBox>
     </children>
 </HBox>

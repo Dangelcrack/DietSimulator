@@ -9,7 +9,6 @@ import java.io.IOException;
  * It contains common properties and methods that can be used by its subclasses.
  */
 public abstract class Controller {
-    // Reference to the main application class
     App app;
 
     /**

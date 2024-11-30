@@ -6,23 +6,26 @@ CREATE TABLE IF NOT EXISTS Diet (
     Description TEXT NOT NULL,
     Type VARCHAR(20) NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS Person (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(50) NOT NULL,
-    Height FLOAT NOT NULL,
-    Weight FLOAT NOT NULL,
+    Height INT NOT NULL,
+    Weight INT NOT NULL,
     Age INT NOT NULL,
-    DietID INT,
-    KEY DietID(DietID),
+    DietID INT DEFAULT NULL,
+    KEY DietID (DietID),
     CONSTRAINT FK_DietID FOREIGN KEY (DietID) REFERENCES Diet(ID) ON DELETE SET NULL
 );
+
+-- Tabla Food
 CREATE TABLE IF NOT EXISTS Food (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(50) NOT NULL,
     Type VARCHAR(20) NOT NULL,
     Calories INT NOT NULL
 );
+
+-- Tabla DietFood (Relación N:M entre Diet y Food)
 CREATE TABLE IF NOT EXISTS DietFood (
     DietID INT NOT NULL,
     FoodID INT NOT NULL,

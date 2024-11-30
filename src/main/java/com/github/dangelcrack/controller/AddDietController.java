@@ -25,19 +25,28 @@ import java.util.ResourceBundle;
  */
 public class AddDietController extends Controller implements Initializable {
 
+    /** VBox for arranging UI components vertically */
     @FXML
     private VBox vbox;
-    @FXML
-    private TextField name; // For diet name
-    @FXML
-    private TextArea description; // For diet description
-    @FXML
-    private ComboBox<TypeDiet> typeDiet; // For selecting diet type
 
+    /** TextField for entering the diet name */
+    @FXML
+    private TextField name;
+
+    /** TextArea for entering the diet description */
+    @FXML
+    private TextArea description;
+
+    /** ComboBox for selecting the diet type */
+    @FXML
+    private ComboBox<TypeDiet> typeDiet;
+
+    /** Reference to the DietaController for saving diets */
     private DietaController controller;
 
     /**
      * This method is called when the controller is opened. It sets the controller reference.
+     * @param input Input parameter to set the controller reference
      */
     @Override
     public void onOpen(Object input) {
@@ -46,18 +55,19 @@ public class AddDietController extends Controller implements Initializable {
 
     /**
      * This method is called when the controller is closed. Currently, it has no implementation.
+     * @param output Output parameter for any data returned on close
      */
     @Override
     public void onClose(Object output) {
-        // No specific actions required on close for now.
     }
 
     /**
      * Initializes the controller class. This method is automatically called after the FXML file has been loaded.
+     * @param location The location of the FXML file
+     * @param resources Resource bundle for internationalization
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Set background image
         URL imageUrl = getClass().getResource("/com/github/dangelcrack/media/ModalImageUtils/img.png");
         BackgroundImage backgroundImage = new BackgroundImage(
                 new javafx.scene.image.Image(imageUrl.toExternalForm()),
@@ -72,6 +82,7 @@ public class AddDietController extends Controller implements Initializable {
 
     /**
      * Handles the closing of the window. It saves the diet details and hides the window.
+     * @param event Event that triggered the window close action
      */
     @FXML
     private void closeWindow(Event event) {
@@ -81,7 +92,7 @@ public class AddDietController extends Controller implements Initializable {
         if (nameValue.isBlank() || descriptionValue.isBlank() || typeDietValue == null) {
             return;
         }
-        Dieta dieta = new Dieta(-1, nameValue, descriptionValue, typeDietValue,null);
+        Dieta dieta = new Dieta(-1, nameValue, descriptionValue, typeDietValue, null);
         this.controller.saveDieta(dieta);
         ((Node) (event.getSource())).getScene().getWindow().hide();
     }

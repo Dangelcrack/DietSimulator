@@ -18,27 +18,31 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * The AppController class is responsible for handling the main application layout,
- * switching scenes, and opening modal dialogs.
+ * The AppController class is responsible for managing the main application layout.
+ * It handles scene transitions, manages the central layout region, and facilitates modal dialogs.
  */
 public class AppController extends Controller implements Initializable {
     @FXML
     private BorderPane borderPane;
     private Controller centerController;
+
     /**
-     * Called when the controller is opened. It sets the initial scene.
+     * Called when the controller is opened. Sets the initial scene to the Diet List.
+     *
+     * @param input Input data passed to the controller, if any (not used here).
+     * @throws IOException if the initial scene cannot be loaded.
      */
     @Override
-    public void onOpen(Object input) throws IOException{
+    public void onOpen(Object input) throws IOException {
         changeScene(Scenes.DIETLIST, null);
     }
 
     /**
      * Changes the scene displayed in the center of the BorderPane.
      *
-     * @param scene the scene to be displayed
-     * @param data  the data to be passed to the controller
-     * @throws IOException if the FXML file cannot be loaded
+     * @param scene The scene to load and display.
+     * @param data  Optional data to pass to the new scene's controller.
+     * @throws IOException if the FXML file for the scene cannot be loaded.
      */
     public void changeScene(Scenes scene, Object data) throws IOException {
         View view = loadFXML(scene);
@@ -46,14 +50,15 @@ public class AppController extends Controller implements Initializable {
         this.centerController = view.controller;
         this.centerController.onOpen(data);
     }
+
     /**
      * Opens a modal dialog with the specified scene and title.
      *
-     * @param scene  the scene to be displayed in the modal
-     * @param title  the title of the modal window
-     * @param parent the parent controller
-     * @param data   the data to be passed to the controller
-     * @throws IOException if the FXML file cannot be loaded
+     * @param scene  The scene to load and display in the modal dialog.
+     * @param title  The title for the modal window.
+     * @param parent The parent controller (context from which the modal is opened).
+     * @param data   Optional data to pass to the modal scene's controller.
+     * @throws IOException if the FXML file for the modal scene cannot be loaded.
      */
     public void openModal(Scenes scene, String title, Controller parent, Object data) throws IOException {
         View view = loadFXML(scene);
@@ -74,24 +79,29 @@ public class AppController extends Controller implements Initializable {
 
     /**
      * Called when the controller is closed.
+     *
+     * @param output Output data passed from the controller on close, if any (not used here).
      */
     @Override
     public void onClose(Object output) {
-        //nothing to do
     }
+
     /**
-     * Initializes the controller class. This method is automatically called after the FXML file has been loaded.
+     * Initializes the controller. This method is automatically invoked after the FXML file has been loaded.
+     *
+     * @param location  The location used to resolve relative paths for the root object.
+     * @param resources The resources used to localize the root object.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
+
     /**
-     * Loads the FXML file for the specified scene.
+     * Loads an FXML file and returns the associated View object containing the scene and controller.
      *
-     * @param scenes the scene to be loaded
-     * @return the View object containing the scene and controller
-     * @throws IOException if the FXML file cannot be loaded
+     * @param scenes The scene to load, specified as an enum constant.
+     * @return A View object containing the loaded scene and its controller.
+     * @throws IOException if the FXML file cannot be loaded.
      */
     public static View loadFXML(Scenes scenes) throws IOException {
         String url = scenes.getURL();
@@ -103,39 +113,34 @@ public class AppController extends Controller implements Initializable {
         view.controller = c;
         return view;
     }
+
     /**
-     * Navigates to the About scene.
-     */
-    @FXML
-    private void goToAbout() throws IOException {
-        changeScene(Scenes.ABOUT, null);
-    }
-    /**
-     * Navigates to the Pokémon List scene.
+     * Navigates to the Diet List scene.
+     *
+     * @throws IOException if the Diet List scene cannot be loaded.
      */
     @FXML
     private void goToDiets() throws IOException {
-        changeScene(Scenes.DIETLIST,null);
+        changeScene(Scenes.DIETLIST, null);
     }
+
     /**
-     * Navigates to the Moves List scene.
+     * Navigates to the Food List scene.
+     *
+     * @throws IOException if the Food List scene cannot be loaded.
      */
     @FXML
-    private void goToFoods() throws IOException{
-        changeScene(Scenes.FOODLIST,null);
+    private void goToFoods() throws IOException {
+        changeScene(Scenes.FOODLIST, null);
     }
+
     /**
-     * Navigates to the Objects List scene.
+     * Navigates to the Persons List scene.
+     *
+     * @throws IOException if the Persons List scene cannot be loaded.
      */
     @FXML
-    private void goToPersons() throws IOException{
-        changeScene(Scenes.PERSONLIST,null);
-    }
-    /**
-     * Navigates to the Combats scene.
-     */
-    @FXML
-    private void goToCalculator() throws IOException{
-        changeScene(Scenes.CALCULATE,null);
+    private void goToPersons() throws IOException {
+        changeScene(Scenes.PERSONLIST, null);
     }
 }

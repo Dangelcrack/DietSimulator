@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,55 +22,95 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * The AddMoveController class is responsible for handling the UI logic for adding moves in the application.
+ * The AddFoodController class is responsible for handling the UI logic for adding foods in the application.
  * It implements the Initializable interface to initialize the controller after its root element has been completely processed.
  */
 public class AddFoodController extends Controller implements Initializable {
+    /** HBox for arranging UI components horizontally */
     @FXML
     private HBox hBox;
+
+    /** TextField for entering the food name */
     @FXML
     private TextField name;
+
+    /** ComboBox for selecting the food type */
     @FXML
     private ComboBox<TypeFood> type;
+
+    /** ComboBox for selecting the diet associated with the food */
     @FXML
     private ComboBox<Dieta> dietaHaveFood;
+
+    /** Button for adding a diet to the table */
     @FXML
     private Button addDiet;
+
+    /** Button for removing a diet from the table */
     @FXML
     private Button deleteDiet;
-    @FXML
-    private Button deleteFood;
+
+    /** TextField for entering the calorie count */
     @FXML
     private TextField calories;
+
+    /** TableView for displaying the list of associated diets */
     @FXML
     private TableView<Dieta> tableView;
+
+    /** TableColumn for displaying diet names */
     @FXML
     private TableColumn<Dieta, String> columnName;
+
+    /** List of available diets fetched from the database */
+    private ObservableList<Dieta> availableDietas;
+
+    /** List of diets currently associated with the food */
     private ObservableList<Dieta> dietaList = FXCollections.observableArrayList();
+
+    /** Reference to the FoodsController for saving foods */
     private FoodsController controller;
 
     /**
-     * This method is called when the controller is opened. It initializes the list of Pokemon and sets the controller reference.
+     * This method is called when the controller is opened. It initializes the list of diets and sets the controller reference.
+     * @param input Input parameter to set the controller reference
      */
     @Override
     public void onOpen(Object input) {
-        List<Dieta> dietas = new ArrayList<>();
-        dietaList = FXCollections.observableArrayList(dietas);
-        tableView.setItems(dietaList);
         this.controller = (FoodsController) input;
+        List<Dieta> allDietas = DietaDAO.build().findAll();
+        this.availableDietas = FXCollections.observableArrayList(allDietas);
+        dietaHaveFood.setItems(availableDietas);
+        dietaHaveFood.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Dieta dieta) {
+                return dieta != null ? dieta.getName() : "";
+            }
 
+            @Override
+            public Dieta fromString(String string) {
+                return availableDietas.stream()
+                        .filter(dieta -> dieta.getName().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+        dietaList = FXCollections.observableArrayList();
+        tableView.setItems(dietaList);
     }
 
     /**
      * This method is called when the controller is closed. Currently, it has no implementation.
+     * @param output Output parameter for any data returned on close
      */
     @Override
     public void onClose(Object output) {
-
     }
 
     /**
      * Initializes the controller class. This method is automatically called after the FXML file has been loaded.
+     * @param url The location of the FXML file
+     * @param resourceBundle Resource bundle for internationalization
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,11 +125,10 @@ public class AddFoodController extends Controller implements Initializable {
         hBox.setBackground(new Background(backgroundImage));
         type.setItems(FXCollections.observableArrayList(TypeFood.values()));
         calories.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) { // Permitir solo dígitos
+            if (!newValue.matches("\\d*")) {
                 calories.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
-        dietaHaveFood.setItems(FXCollections.observableArrayList(DietaDAO.build().findAll()));
         deleteDiet.setOnAction(event -> {
             Dieta selectedDieta = dietaHaveFood.getValue();
             if (selectedDieta != null && dietaList.contains(selectedDieta)) {
@@ -111,18 +151,18 @@ public class AddFoodController extends Controller implements Initializable {
     }
 
     /**
-     * Handles the closing of the window. It saves the move details and hides the window.
+     * Handles the closing of the window. It saves the food details and hides the window.
+     * @param event Event that triggered the window close action
      */
     @FXML
     private void closeWindow(Event event) {
-            String foodName = name.getText().trim();
-            String caloriesText = calories.getText().trim();
-            TypeFood foodType = type.getValue();
-            List<Dieta> selectedDietaList = new ArrayList<>(dietaList);
-            int caloriesValue;
-            caloriesValue = Integer.parseInt(caloriesText);
-            Comida comida = new Comida(foodName, foodType, caloriesValue, selectedDietaList);
-            this.controller.saveComida(comida);
-            ((Node) event.getSource()).getScene().getWindow().hide();
+        String foodName = name.getText().trim();
+        String caloriesText = calories.getText().trim();
+        TypeFood foodType = type.getValue();
+        List<Dieta> selectedDietaList = new ArrayList<>(dietaList);
+        int caloriesValue = Integer.parseInt(caloriesText);
+        Comida comida = new Comida(foodName, foodType, caloriesValue, selectedDietaList);
+        this.controller.saveComida(comida);
+        ((Node) event.getSource()).getScene().getWindow().hide();
     }
 }

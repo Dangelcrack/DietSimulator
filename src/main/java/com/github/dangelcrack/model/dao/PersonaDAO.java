@@ -14,12 +14,15 @@ import java.util.List;
  * Provides methods to perform CRUD operations and other database interactions.
  */
 public class PersonaDAO implements DAO<Persona, String> {
+
+    // SQL Queries for CRUD operations
     private static final String FINDALL = "SELECT ID, Name, Height, Weight, Age, DietID FROM Person";
     private static final String FINDBYID = "SELECT ID, Name, Height, Weight, Age, DietID FROM Person WHERE ID = ?";
     private static final String FINDBYNAME = "SELECT ID, Name, Height, Weight, Age, DietID FROM Person WHERE Name = ?";
     private static final String INSERT = "INSERT INTO Person (Name, Height, Weight, Age, DietID) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE Person SET Name = ?, Height = ?, Weight = ?, Age = ?, DietID = ? WHERE ID = ?";
     private static final String DELETE = "DELETE FROM Person WHERE ID = ?";
+
     private Connection conn;
 
     /**
@@ -30,7 +33,8 @@ public class PersonaDAO implements DAO<Persona, String> {
     }
 
     /**
-     * Saves the 'Persona' entity to the database. If the persona already exists, it updates the existing record.
+     * Saves the 'Persona' entity to the database.
+     * If the persona already exists, it updates the existing record.
      *
      * @param persona The 'Persona' entity to save.
      * @return The saved 'Persona' entity.
@@ -42,29 +46,50 @@ public class PersonaDAO implements DAO<Persona, String> {
         }
 
         try {
-            if (findById(persona.getId()) == null) {
-                // INSERT
+            Persona existingPersona = findById(persona.getId());
+
+            if (existingPersona == null) {
+                // INSERT operation
                 try (PreparedStatement pst = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
                     pst.setString(1, persona.getName());
-                    pst.setInt(2, persona.getAltura());
-                    pst.setInt(3, persona.getPeso());
-                    pst.setInt(4, persona.getEdad());
-                    pst.setInt(5, persona.getDieta() != null ? persona.getDieta().getId() : null); // Guardar solo el ID
+                    pst.setInt(2, persona.getAltura()); // Height
+                    pst.setInt(3, persona.getPeso()); // Weight
+                    pst.setInt(4, persona.getEdad()); // Age
+
+                    if (persona.getDieta() != null) {
+                        if (DietaDAO.build().findById(persona.getDieta().getId()) != null) {
+                            pst.setInt(5, persona.getDieta().getId()); // DietID
+                        } else {
+                            throw new SQLException("Invalid Diet ID: " + persona.getDieta().getId());
+                        }
+                    } else {
+                        pst.setNull(5, Types.INTEGER); // No diet
+                    }
+
                     pst.executeUpdate();
                     try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
                         if (generatedKeys.next()) {
-                            persona.setId(generatedKeys.getInt(1));
+                            persona.setId(generatedKeys.getInt(1)); // Set generated ID
                         }
                     }
                 }
             } else {
-                // UPDATE
+                // UPDATE operation
                 try (PreparedStatement pst = conn.prepareStatement(UPDATE)) {
                     pst.setString(1, persona.getName());
                     pst.setInt(2, persona.getAltura());
                     pst.setInt(3, persona.getPeso());
                     pst.setInt(4, persona.getEdad());
-                    pst.setInt(5, persona.getDieta() != null ? persona.getDieta().getId() : null); // Guardar solo el ID
+
+                    if (persona.getDieta() != null) {
+                        if (DietaDAO.findById(persona.getDieta().getId()) != null) {
+                            pst.setInt(5, persona.getDieta().getId());
+                        } else {
+                            throw new SQLException("Invalid Diet ID: " + persona.getDieta().getId());
+                        }
+                    } else {
+                        pst.setNull(5, Types.INTEGER);
+                    }
                     pst.setInt(6, persona.getId());
                     pst.executeUpdate();
                 }
@@ -75,7 +100,6 @@ public class PersonaDAO implements DAO<Persona, String> {
 
         return persona;
     }
-
 
     /**
      * Deletes the 'Persona' entity from the database.
@@ -91,7 +115,7 @@ public class PersonaDAO implements DAO<Persona, String> {
                 pst.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
-                persona = null;
+                persona = null; // Return null in case of failure
             }
         }
         return persona;
@@ -116,7 +140,7 @@ public class PersonaDAO implements DAO<Persona, String> {
                     persona.setPeso(rs.getInt("weight"));
                     persona.setEdad(rs.getInt("age"));
                     int dietaId = rs.getInt("DietID");
-                    persona.setDieta(dietaId > 0 ? DietaDAO.findById(dietaId) : null);
+                    persona.setDieta(dietaId > 0 ? DietaDAO.findById(dietaId) : null); // Set diet
                 }
             }
         } catch (SQLException e) {
@@ -125,6 +149,29 @@ public class PersonaDAO implements DAO<Persona, String> {
         return persona;
     }
 
+    /**
+     * Retrieves the diet name associated with a specific persona ID.
+     *
+     * @param personaId The ID of the persona.
+     * @return The name of the diet or null if not found.
+     */
+    public String getDietNameByPersonaId(int personaId) {
+        String dietName = null;
+        String query = "SELECT d.Name AS DietName FROM Person p LEFT JOIN Diet d ON p.DietID = d.ID WHERE p.ID = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, personaId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    dietName = rs.getString("DietName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dietName;
+    }
 
     /**
      * Finds a 'Persona' entity by its name.
@@ -145,7 +192,7 @@ public class PersonaDAO implements DAO<Persona, String> {
                     persona.setPeso(rs.getInt("weight"));
                     persona.setEdad(rs.getInt("age"));
                     String dietaString = rs.getString("dietid");
-                    persona.setDieta(dietaString != null ? Dieta.fromString(dietaString) : null);
+                    persona.setDieta(dietaString != null ? Dieta.fromString(dietaString) : null); // Set diet from string
                 }
             }
         } catch (SQLException e) {
@@ -155,7 +202,7 @@ public class PersonaDAO implements DAO<Persona, String> {
     }
 
     /**
-     * Finds all 'Persona' entities in the database.
+     * Retrieves all 'Persona' entities from the database.
      *
      * @return A list of all 'Persona' entities.
      */
@@ -172,7 +219,7 @@ public class PersonaDAO implements DAO<Persona, String> {
                 persona.setPeso(rs.getInt("weight"));
                 persona.setEdad(rs.getInt("age"));
                 String dietaString = rs.getString("dietid");
-                persona.setDieta(dietaString != null ? Dieta.fromString(dietaString) : null);
+                persona.setDieta(dietaString != null ? Dieta.fromString(dietaString) : null); // Set diet
                 personas.add(persona);
             }
         } catch (SQLException e) {
@@ -182,7 +229,7 @@ public class PersonaDAO implements DAO<Persona, String> {
     }
 
     /**
-     * Closes any resources associated with this DAO.
+     * Closes the database connection and any associated resources.
      *
      * @throws IOException If an I/O error occurs.
      */
@@ -190,7 +237,7 @@ public class PersonaDAO implements DAO<Persona, String> {
     public void close() throws IOException {
         try {
             if (conn != null && !conn.isClosed()) {
-                conn.close();
+                conn.close(); // Close connection if open
             }
         } catch (SQLException e) {
             e.printStackTrace();

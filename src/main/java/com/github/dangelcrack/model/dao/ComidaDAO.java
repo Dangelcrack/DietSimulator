@@ -22,9 +22,7 @@ public class ComidaDAO implements DAO<Comida, String> {
             "WHERE df.DietID = ?";
     private static final String INSERTFOODTODIET = "INSERT INTO DietFood (DietID, FoodID) VALUES (?, ?)";
     private static final String DELETE_OLD_FOOD = "DELETE FROM DietFood WHERE FoodID = ?";
-    private static final String checkFoodQuery = "SELECT COUNT(*) FROM Food WHERE ID = ?";
     private static final String checkDietQuery = "SELECT COUNT(*) FROM Diet WHERE ID = ?";
-    private static final String DELETEFOODTODIET = "DELETE FROM DietFood WHERE FoodID = ? AND DietID = ?";
     private Connection conn;
 
     /**

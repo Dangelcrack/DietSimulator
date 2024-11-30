@@ -12,6 +12,7 @@ import java.util.List;
 
 public class DietaDAO implements DAO<Dieta, String> {
 
+    // SQL Query Constants
     private static final String INSERT_DIETA =
             "INSERT INTO Diet (Name, Description, Type) VALUES (?, ?, ?)";
 
@@ -26,46 +27,59 @@ public class DietaDAO implements DAO<Dieta, String> {
 
     private static final String FIND_DIETA_BY_NAME =
             "SELECT ID, Name, Description, Type FROM Diet WHERE Name = ?";
+
     private static final String FIND_DIET_BY_FOOD_NAME =
-            "SELECT d.ID, d.Name, d.Description, d.Type\n" +
-                    "        FROM Diet d\n" +
-                    "        JOIN DietFood df ON d.ID = df.DietID\n" +
-                    "        JOIN Food f ON df.FoodID = f.ID\n" +
-                    "        WHERE f.Name = ?;";
-    private static final String FIND_DIETA_BY_ID = "SELECT ID, Name, Description, Type FROM Diet WHERE ID = ?";
-    private static final String FIND_BY_OBJ_NAME = "SELECT d.ID, d.Name, d.Description, d.Type " +
-            "FROM Diet d " +
-            "INNER JOIN Person p ON d.ID = p.DietID " +
-            "WHERE p.Name = ?";
+            "SELECT d.ID, d.Name, d.Description, d.Type " +
+                    "FROM Diet d " +
+                    "JOIN DietFood df ON d.ID = df.DietID " +
+                    "JOIN Food f ON df.FoodID = f.ID " +
+                    "WHERE f.Name = ?;";
+
+    private static final String FIND_DIETA_BY_ID =
+            "SELECT ID, Name, Description, Type FROM Diet WHERE ID = ?";
+
+    private static final String FIND_BY_OBJ_NAME =
+            "SELECT d.ID, d.Name, d.Description, d.Type " +
+                    "FROM Diet d " +
+                    "INNER JOIN Person p ON d.ID = p.DietID " +
+                    "WHERE p.Name = ?";
+
     private static Connection conn;
 
+    /** Constructor initializing the connection to the database */
     public DietaDAO() {
         conn = ConnectionMariaDB.getConnection();
     }
 
+    /**
+     * Saves a Diet object, either by inserting a new record or updating an existing one.
+     * @param d The Diet object to be saved.
+     * @return The saved Diet object.
+     */
     @Override
     public Dieta save(Dieta d) {
         if (d == null || d.getName() == null) return null;
 
         try {
-            // Verifica si la Dieta ya existe
+            // Check if the Diet already exists
             Dieta existingDieta = findByName(d.getName());
             if (existingDieta == null) {
-                // Inserta nueva Dieta
+                // Insert a new Diet
                 try (PreparedStatement pst = conn.prepareStatement(INSERT_DIETA, Statement.RETURN_GENERATED_KEYS)) {
                     pst.setString(1, d.getName());
                     pst.setString(2, d.getDescription());
                     pst.setString(3, d.getTypeDiet() != null ? d.getTypeDiet().toString() : null);
                     pst.executeUpdate();
 
+                    // Retrieve the generated ID and set it to the Diet object
                     try (ResultSet rs = pst.getGeneratedKeys()) {
                         if (rs.next()) {
-                            d.setId(rs.getInt(1)); // Asigna el ID generado
+                            d.setId(rs.getInt(1));
                         }
                     }
                 }
             } else {
-                // Actualiza Dieta existente
+                // Update existing Diet
                 try (PreparedStatement pst = conn.prepareStatement(UPDATE_DIETA)) {
                     pst.setString(1, d.getDescription());
                     pst.setString(2, d.getTypeDiet() != null ? d.getTypeDiet().toString() : null);
@@ -81,12 +95,17 @@ public class DietaDAO implements DAO<Dieta, String> {
         return d;
     }
 
+    /**
+     * Deletes the given Diet object from the database.
+     * @param d The Diet object to be deleted.
+     * @return The deleted Diet object.
+     */
     @Override
     public Dieta delete(Dieta d) {
         if (d == null || d.getName() == null) return null;
 
         try {
-            // Elimina la Dieta
+            // Execute delete query
             try (PreparedStatement pst = conn.prepareStatement(DELETE_DIETA)) {
                 pst.setString(1, d.getName());
                 pst.executeUpdate();
@@ -98,6 +117,11 @@ public class DietaDAO implements DAO<Dieta, String> {
         return d;
     }
 
+    /**
+     * Finds a Diet by its name.
+     * @param name The name of the Diet.
+     * @return The found Diet object, or null if not found.
+     */
     @Override
     public Dieta findByName(String name) {
         Dieta dieta = null;
@@ -105,13 +129,14 @@ public class DietaDAO implements DAO<Dieta, String> {
         try (PreparedStatement pst = conn.prepareStatement(FIND_DIETA_BY_NAME)) {
             pst.setString(1, name);
 
+            // Execute query and populate the Diet object
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     dieta = new Dieta();
                     dieta.setId(rs.getInt("ID"));
                     dieta.setName(rs.getString("Name"));
                     dieta.setDescription(rs.getString("Description"));
-                    dieta.setTypeDiet(TypeDiet.valueOf(rs.getString("Type"))); // Asume que TypeDiet es un enum
+                    dieta.setTypeDiet(TypeDiet.valueOf(rs.getString("Type"))); // Assuming TypeDiet is an enum
                 }
             }
         } catch (SQLException e) {
@@ -120,6 +145,12 @@ public class DietaDAO implements DAO<Dieta, String> {
 
         return dieta;
     }
+
+    /**
+     * Finds diets based on the name of the food they contain.
+     * @param foodName The name of the food.
+     * @return A list of Diet objects containing the specified food.
+     */
     public List<Dieta> findDietByFoodName(String foodName) {
         List<Dieta> dietList = new ArrayList<>();
         try (PreparedStatement pst = conn.prepareStatement(FIND_DIET_BY_FOOD_NAME)) {
@@ -140,11 +171,18 @@ public class DietaDAO implements DAO<Dieta, String> {
 
         return dietList;
     }
+
+    /**
+     * Finds a Diet by its ID.
+     * @param id The ID of the Diet.
+     * @return The found Diet object, or null if not found.
+     */
     public static Dieta findById(int id) {
         Dieta dieta = null;
         try (PreparedStatement pst = conn.prepareStatement(FIND_DIETA_BY_ID)) {
             pst.setInt(1, id);
 
+            // Execute query and populate the Diet object
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     dieta = new Dieta();
@@ -160,6 +198,12 @@ public class DietaDAO implements DAO<Dieta, String> {
 
         return dieta;
     }
+
+    /**
+     * Finds diets assigned to a specific person.
+     * @param p The Person object.
+     * @return A list of Diet objects assigned to the person.
+     */
     public List<Dieta> findDietByPerson(Persona p) {
         List<Dieta> dietList = new ArrayList<>();
         try (PreparedStatement pst = conn.prepareStatement(FIND_BY_OBJ_NAME)) {
@@ -179,6 +223,11 @@ public class DietaDAO implements DAO<Dieta, String> {
         }
         return dietList;
     }
+
+    /**
+     * Retrieves all diets from the database.
+     * @return A list of all Diet objects.
+     */
     @Override
     public List<Dieta> findAll() {
         List<Dieta> dietas = new ArrayList<>();
@@ -190,7 +239,7 @@ public class DietaDAO implements DAO<Dieta, String> {
                     dieta.setId(rs.getInt("ID"));
                     dieta.setName(rs.getString("Name"));
                     dieta.setDescription(rs.getString("Description"));
-                    dieta.setTypeDiet(TypeDiet.valueOf(rs.getString("Type"))); // Asume que TypeDiet es un enum
+                    dieta.setTypeDiet(TypeDiet.valueOf(rs.getString("Type"))); // Assuming TypeDiet is an enum
                     dietas.add(dieta);
                 }
             }
@@ -201,6 +250,10 @@ public class DietaDAO implements DAO<Dieta, String> {
         return dietas;
     }
 
+    /**
+     * Closes the database connection.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     public void close() throws IOException {
         try {
@@ -210,6 +263,10 @@ public class DietaDAO implements DAO<Dieta, String> {
         }
     }
 
+    /**
+     * Builds and returns a new DietaDAO instance.
+     * @return A new DietaDAO object.
+     */
     public static DietaDAO build() {
         return new DietaDAO();
     }

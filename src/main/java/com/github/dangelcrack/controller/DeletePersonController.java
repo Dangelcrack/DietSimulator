@@ -11,6 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.util.StringConverter;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -22,15 +24,17 @@ public class DeletePersonController extends Controller implements Initializable 
     @FXML
     private ComboBox<Persona> personaComboBox;
     private PersonsController controller;
+
     /**
      * This method is called when the view is opened.
-     * @param input The ObjectsController instance passed as input.
+     * @param input The PersonsController instance passed as input.
      * @throws IOException if an I/O error occurs.
      */
     @Override
     public void onOpen(Object input) throws IOException {
         this.controller = (PersonsController) input;
     }
+
     /**
      * This method is called when the view is closed.
      * @param output The output data to be passed, not used in this implementation.
@@ -38,8 +42,9 @@ public class DeletePersonController extends Controller implements Initializable 
     @Override
     public void onClose(Object output) {
     }
+
     /**
-     * Initializes the controller class, sets up the background image, and populates the objects combo box.
+     * Initializes the controller class, sets up the background image, and populates the persons combo box.
      * @param url The location used to resolve relative paths for the root object, or null if unknown.
      * @param resourceBundle The resources used to localize the root object, or null if not localized.
      */
@@ -57,10 +62,27 @@ public class DeletePersonController extends Controller implements Initializable 
         List<Persona> personas = PersonaDAO.build().findAll();
         ObservableList<Persona> observableNames = FXCollections.observableArrayList(personas);
         personaComboBox.setItems(observableNames);
+        personaComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Persona persona) {
+                return persona != null ? persona.getName() : "";
+            }
+
+            @Override
+            public Persona fromString(String string) {
+                return personas.stream()
+                        .filter(persona -> persona.getName().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+        if (!observableNames.isEmpty()) {
+            personaComboBox.setValue(observableNames.get(0));
+        }
     }
 
     /**
-     * Handles the close window event, deletes the selected object, and hides the window.
+     * Handles the close window event, deletes the selected person, and hides the window.
      * @param event The event that triggered the method call.
      */
     @FXML

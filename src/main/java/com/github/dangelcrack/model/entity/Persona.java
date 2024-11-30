@@ -18,6 +18,13 @@ public class Persona {
         this.edad = edad;
         this.dieta = dieta;
     }
+    public Persona(String name, int altura, int peso, int edad,Dieta dieta) {
+        this.name = name;
+        this.altura = altura;
+        this.peso = peso;
+        this.edad = edad;
+        this.dieta = dieta;
+    }
 
     public Persona() {
         this(-1,"",-1,-1,-1,null);

@@ -28,24 +28,33 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class PersonsController extends Controller implements Initializable {
+
     @FXML
     private VBox vbox;
+
     @FXML
     private TableView<Persona> tableViewPersona;
+
     @FXML
     private TableColumn<Persona, String> columnNamePerson;
+
     @FXML
-    private TableColumn<Persona,String> columnNameDiet;
+    private TableColumn<Persona, String> columnNameDiet;
+
     @FXML
     private TableColumn<Persona, Integer> columnPeso;
+
     @FXML
     private TableColumn<Persona, Integer> columnAltura;
+
     @FXML
     private TableColumn<Persona, Integer> columnEdad;
+
     public ObservableList<Persona> personas;
+
     /**
      * Called when the controller is opened.
-     * Retrieves all objects from the database, updates the observable list, and sets it to the table view.
+     * Retrieves all personas from the database, updates the observable list, and sets it to the table view.
      *
      * @param input The input object, not used in this method.
      */
@@ -58,7 +67,7 @@ public class PersonsController extends Controller implements Initializable {
     }
 
     /**
-     * Called when the controller is closed.
+     * Called when the controller is closed. Currently does nothing.
      *
      * @param output The output object, not used in this method.
      */
@@ -68,18 +77,18 @@ public class PersonsController extends Controller implements Initializable {
     }
 
     /**
-     * Deletes the specified old object from the observable list.
+     * Deletes the specified persona from the observable list.
      *
-     * @param oldPerson The object to be deleted.
+     * @param oldPerson The persona to be deleted.
      */
     public void deleteOldPersona(Persona oldPerson) {
         this.personas.remove(oldPerson);
     }
 
     /**
-     * Saves the new object to the database and adds it to the observable list.
+     * Saves a new persona to the database and adds it to the observable list.
      *
-     * @param newPersona The object to be saved.
+     * @param newPersona The persona to be saved.
      */
     public void savePersona(Persona newPersona) {
         PersonaDAO.build().save(newPersona);
@@ -87,9 +96,9 @@ public class PersonsController extends Controller implements Initializable {
     }
 
     /**
-     * Deletes the specified object from the database and removes it from the observable list.
+     * Deletes a persona from the database and removes it from the observable list.
      *
-     * @param deletePersona The object to be deleted.
+     * @param deletePersona The persona to be deleted.
      */
     public void deletePersona(Persona deletePersona) {
         PersonaDAO.build().delete(deletePersona);
@@ -97,7 +106,24 @@ public class PersonsController extends Controller implements Initializable {
     }
 
     /**
+     * Finds a persona by its name.
+     *
+     * @param name The name of the persona to search for.
+     * @return The persona object, or null if not found.
+     */
+    public Persona findPersonaByName(String name) {
+        List<Persona> personaList = PersonaDAO.build().findAll();
+        for (Persona p : personaList) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Initializes the controller when the corresponding view is loaded.
+     * Sets up the table view columns and background image.
      *
      * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
      * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
@@ -107,6 +133,8 @@ public class PersonsController extends Controller implements Initializable {
         tableViewPersona.refresh();
         tableViewPersona.setEditable(true);
         tableViewPersona.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Configure background image for the VBox
         URL imageUrl = getClass().getResource("/com/github/dangelcrack/media/ModalImageUtils/img.png");
         BackgroundImage backgroundImage = new BackgroundImage(
                 new Image(imageUrl.toExternalForm()),
@@ -116,35 +144,46 @@ public class PersonsController extends Controller implements Initializable {
                 new BackgroundSize(100, 100, true, true, false, true)
         );
         vbox.setBackground(new Background(backgroundImage));
-        columnNamePerson.setCellValueFactory(persona -> new SimpleStringProperty(persona.getValue().getName()));
-        columnNamePerson.setOnEditCommit(event -> {
-            if (event.getNewValue().equals(event.getOldValue())) {
-                return;
-            }
 
-            if (event.getNewValue().length() <= 20) {
-                Persona persona = event.getRowValue();
-                PersonaDAO.build().delete(persona);
-                persona.setName(event.getNewValue());
-                PersonaDAO.build().save(persona);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("¡Te has pasado del límite de caracteres!");
-                alert.show();
+        // Set up column for displaying persona name
+        columnNamePerson.setCellValueFactory(persona -> new SimpleStringProperty(persona.getValue().getName()));
+
+        // Handle the event when the persona name is edited
+        columnNamePerson.setOnEditCommit(event -> {
+            // Only update if the new value is different and within character limit
+            if (!event.getNewValue().equals(event.getOldValue())) {
+                if (event.getNewValue().length() <= 20) {
+                    Persona persona = event.getRowValue();
+                    PersonaDAO.build().delete(persona);  // Delete the old persona
+                    persona.setName(event.getNewValue());  // Update the name
+                    PersonaDAO.build().save(persona);  // Save the updated persona
+                } else {
+                    // Show an alert if the name exceeds character limit
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("¡Te has pasado del límite de caracteres!");  // Error message
+                    alert.show();
+                }
             }
         });
+
+        // Set up columns for displaying persona details (peso, altura, edad)
         columnPeso.setCellValueFactory(new PropertyValueFactory<>("peso"));
         columnAltura.setCellValueFactory(new PropertyValueFactory<>("altura"));
         columnEdad.setCellValueFactory(new PropertyValueFactory<>("edad"));
-        columnNameDiet.setCellValueFactory(persona-> {
-            Dieta dieta = persona.getValue().getDieta();
-            return new SimpleStringProperty(dieta != null ? dieta.getName():"");
+
+        // Set up column for displaying associated diet name
+        columnNameDiet.setCellValueFactory(persona -> {
+            Persona p = persona.getValue();
+            String dietName = PersonaDAO.build().getDietNameByPersonaId(p.getId());
+            return new SimpleStringProperty(dietName != null ? dietName : "");
         });
     }
+
     /**
-     * Handles the event when the user wants to add an object.
+     * Handles the event when the user wants to add a persona.
+     * Opens a modal window to add a new persona.
      *
-     * @throws IOException If an I/O error occurs.
+     * @throws IOException If an I/O error occurs while opening the modal.
      */
     @FXML
     private void addPersona() throws IOException {
@@ -152,9 +191,10 @@ public class PersonsController extends Controller implements Initializable {
     }
 
     /**
-     * Handles the event when the user wants to delete an object.
+     * Handles the event when the user wants to delete a persona.
+     * Opens a modal window to delete a persona.
      *
-     * @throws IOException If an I/O error occurs.
+     * @throws IOException If an I/O error occurs while opening the modal.
      */
     @FXML
     private void deletePersona() throws IOException {
@@ -162,9 +202,10 @@ public class PersonsController extends Controller implements Initializable {
     }
 
     /**
-     * Handles the event when the user wants to edit an object.
+     * Handles the event when the user wants to edit a persona.
+     * Opens a modal window to edit an existing persona.
      *
-     * @throws IOException If an I/O error occurs.
+     * @throws IOException If an I/O error occurs while opening the modal.
      */
     @FXML
     private void editPersona() throws IOException {

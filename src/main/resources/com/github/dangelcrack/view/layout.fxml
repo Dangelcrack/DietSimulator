@@ -24,16 +24,6 @@
                   <MenuItem mnemonicParsing="false" onAction="#goToPersons" text="Person Utils" />
                     </items>
                 </Menu>
-            <Menu mnemonicParsing="false" text="Calculate!">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#goToCalculator" text="Calculator" />
-               </items>
-            </Menu>
-                <Menu mnemonicParsing="false" onAction="#goToAbout" text="About">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About me!" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
     </top>

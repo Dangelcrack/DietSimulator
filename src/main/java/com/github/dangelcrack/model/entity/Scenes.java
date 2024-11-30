@@ -9,7 +9,6 @@ public enum Scenes {
     DIETLIST("view/DietaList.fxml"),
     FOODLIST("view/FoodsList.fxml"),
     PERSONLIST("view/PersonsList.fxml"),
-    ABOUT("view/about.fxml"),
     ADDDIET("view/addDiet.fxml"),
     ADDFOOD("view/addFood.fxml"),
     ADDPERSON("view/addPerson.fxml"),
@@ -18,8 +17,7 @@ public enum Scenes {
     DELETEPERSON("view/deletePerson.fxml"),
     EDITDIET("view/editDiet.fxml"),
     EDITFOOD("view/editFood.fxml"),
-    EDITPERSON("view/editPerson.fxml"),
-    CALCULATE("view/calculate.fxml");
+    EDITPERSON("view/editPerson.fxml");
     private String url;
     /**
      * Constructor for the enum constant.
