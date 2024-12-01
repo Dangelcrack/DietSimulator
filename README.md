@@ -119,4 +119,4 @@ Crear una solución centralizada y automatizada para gestionar dietas, alimentos
 
 1. **Clonar el Repositorio**:
    ```bash
-   git clone https://github.com/usuario/DietSimulator.git
+   git clone https://github.com/Dangelcrack/DietSimulator/
