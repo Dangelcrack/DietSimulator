@@ -14,8 +14,6 @@ import java.util.List;
  * Provides methods to perform CRUD operations and other database interactions.
  */
 public class PersonaDAO implements DAO<Persona, String> {
-
-    // SQL Queries for CRUD operations
     private static final String FINDALL = "SELECT ID, Name, Height, Weight, Age, DietID FROM Person";
     private static final String FINDBYID = "SELECT ID, Name, Height, Weight, Age, DietID FROM Person WHERE ID = ?";
     private static final String FINDBYNAME = "SELECT ID, Name, Height, Weight, Age, DietID FROM Person WHERE Name = ?";

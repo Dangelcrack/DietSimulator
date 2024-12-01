@@ -61,6 +61,7 @@ public class DietaDAO implements DAO<Dieta, String> {
         if (d == null || d.getName() == null) return null;
 
         try {
+            //INSERT
             Dieta existingDieta = findByName(d.getName());
             if (existingDieta == null) {
                 try (PreparedStatement pst = conn.prepareStatement(INSERT_DIETA, Statement.RETURN_GENERATED_KEYS)) {
@@ -75,6 +76,7 @@ public class DietaDAO implements DAO<Dieta, String> {
                     }
                 }
             } else {
+                //UPDATE
                 try (PreparedStatement pst = conn.prepareStatement(UPDATE_DIETA)) {
                     pst.setString(1, d.getDescription());
                     pst.setString(2, d.getTypeDiet() != null ? d.getTypeDiet().toString() : null);

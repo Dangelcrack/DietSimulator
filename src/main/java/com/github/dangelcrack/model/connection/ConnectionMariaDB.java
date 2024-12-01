@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ConnectionMariaDB {
-    private final static String FILE = "connectionh2.xml"; // Asegúrate de que esta ruta sea correcta
+    private final static String FILE = "connectionh2.xml";
     private static ConnectionMariaDB _instance;
     private static Connection conn;
 

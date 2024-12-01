@@ -93,16 +93,13 @@ public class ConnectionProperties implements Serializable {
             return "jdbc:" + db + "://" + server + ":" + port + "/" + database;
         } else if ("h2".equalsIgnoreCase(db)) {
             if (server.startsWith("tcp://")) {
-                // Para conexión H2 en modo servidor (TCP)
                 return "jdbc:h2:" + server + "/" + database;
             } else {
-                // Para conexión H2 en modo archivo
                 String url = "jdbc:h2:";
                 if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                    // Ruta para Windows
-                    url += "file:/" + server.replace("~", System.getProperty("user.home")).replace("\\", "/") + "/" + database + ";AUTO_SERVER=TRUE";
+                    url += "file:/" + server.replace("~", System.getProperty("user.home")).replace("\\", "/")
+                            + "/" + database + ";AUTO_SERVER=TRUE";
                 } else {
-                    // Ruta para Unix
                     url += "file:" + server.replace("~", System.getProperty("user.home")) + "/" + database + ";AUTO_SERVER=TRUE";
                 }
                 return url;
