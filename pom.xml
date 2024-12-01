@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.20.0</version> <!-- Cambia por la última versión disponible -->
+            <version>2.20.0</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -49,6 +49,17 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>3.3.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.32</version>  <!-- Check the latest version -->
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.220</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -66,8 +77,6 @@
                 <version>0.0.6</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running -->
-                        <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>com.github.dangelcrack.App</mainClass>

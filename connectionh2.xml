@@ -1,0 +1,8 @@
+<connection>
+    <db>h2</db>
+    <server>tcp://localhost</server> <!-- Asegúrate de que sea TCP -->
+    <port>8082</port> <!-- El puerto predeterminado es 9092 -->
+    <database>/users/yo/test/diet;SCHEMA=diet</database> <!-- Ruta completa al archivo de la base de datos -->
+    <user>sa</user>
+    <password></password> <!-- Especifica la contraseña si la tienes -->
+</connection>

@@ -61,17 +61,13 @@ public class DietaDAO implements DAO<Dieta, String> {
         if (d == null || d.getName() == null) return null;
 
         try {
-            // Check if the Diet already exists
             Dieta existingDieta = findByName(d.getName());
             if (existingDieta == null) {
-                // Insert a new Diet
                 try (PreparedStatement pst = conn.prepareStatement(INSERT_DIETA, Statement.RETURN_GENERATED_KEYS)) {
                     pst.setString(1, d.getName());
                     pst.setString(2, d.getDescription());
                     pst.setString(3, d.getTypeDiet() != null ? d.getTypeDiet().toString() : null);
                     pst.executeUpdate();
-
-                    // Retrieve the generated ID and set it to the Diet object
                     try (ResultSet rs = pst.getGeneratedKeys()) {
                         if (rs.next()) {
                             d.setId(rs.getInt(1));
@@ -79,7 +75,6 @@ public class DietaDAO implements DAO<Dieta, String> {
                     }
                 }
             } else {
-                // Update existing Diet
                 try (PreparedStatement pst = conn.prepareStatement(UPDATE_DIETA)) {
                     pst.setString(1, d.getDescription());
                     pst.setString(2, d.getTypeDiet() != null ? d.getTypeDiet().toString() : null);

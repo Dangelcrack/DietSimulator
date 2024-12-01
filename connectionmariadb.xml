@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<connection>
+    <db>mariadb</db>
+    <server>localhost</server>
+    <port>3307</port>
+    <database>diet</database>
+    <user>root</user>
+    <password>root</password>
+</connection>
