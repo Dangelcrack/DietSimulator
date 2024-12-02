@@ -115,13 +115,9 @@ public class ComidaDAO implements DAO<Comida, String> {
         if (comida == null || comida.getId() == 0) return comida;
 
         try (PreparedStatement pstFood = conn.prepareStatement(DELETE_FOOD);
-             PreparedStatement pstDietFood = conn.prepareStatement(DELETE_OLD_FOOD)) {
-
-            // Delete associations in DietFood first
+            PreparedStatement pstDietFood = conn.prepareStatement(DELETE_OLD_FOOD)) {
             pstDietFood.setInt(1, comida.getId());
             pstDietFood.executeUpdate();
-
-            // Now delete the food itself from the Food table
             pstFood.setInt(1, comida.getId());
             pstFood.executeUpdate();
         } catch (SQLException e) {
@@ -134,21 +130,30 @@ public class ComidaDAO implements DAO<Comida, String> {
     @Override
     public Comida findByName(String name) {
         Comida result = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
-        try (PreparedStatement pst = conn.prepareStatement(FINDBYNAME)) {
+        try {
+            pst = conn.prepareStatement(FINDBYNAME);
             pst.setString(1, name);
+            rs = pst.executeQuery();
 
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    result = new Comida();
-                    result.setId(rs.getInt("ID"));
-                    result.setName(rs.getString("Name"));
-                    result.setTypeFood(TypeFood.valueOf(rs.getString("Type")));
-                    result.setCalories(rs.getInt("Calories"));
-                }
+            if (rs.next()) {
+                result = new Comida();
+                result.setId(rs.getInt("ID"));
+                result.setName(rs.getString("Name"));
+                result.setTypeFood(TypeFood.valueOf(rs.getString("Type")));
+                result.setCalories(rs.getInt("Calories"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return result;
